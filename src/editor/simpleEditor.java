@@ -37,6 +37,7 @@ public class simpleEditor extends Application {
         private int fontSize = STARTING_FONT_SIZE;
         
         private LinkedList<Text> output = new LinkedList<Text>(); 
+      
 
         private String fontName = "Verdana";
 
@@ -47,16 +48,24 @@ public class simpleEditor extends Application {
             // Initialize some empty text and add it to root so that it will be displayed.
 //            displayText = new Text(textCenterX, textCenterY, "");
             output = new LinkedList<Text>();
+            for (Text p:output) {
+            	p = new Text(textCenterX, textCenterY, "");
+            }
             // Always set the text origin to be VPos.TOP! Setting the origin to be VPos.TOP means
             // that when the text is assigned a y-position, that position corresponds to the
             // highest position across all letters (for example, the top of a letter like "I", as
             // opposed to the top of a letter like "e"), which makes calculating positions much
             // simpler!
-            displayText.setTextOrigin(VPos.TOP);
-            displayText.setFont(Font.font(fontName, fontSize));
+            for (Text p:output) {
+            	p.setTextOrigin(VPos.TOP);
+            	p.setFont(Font.font(fontName, fontSize));
+            }
+
 
             // All new Nodes need to be added to the root in order to be displayed.
-            root.getChildren().add(displayText);
+            for (Text p:output) {
+            root.getChildren().add(p);
+            }
         }
 
         @Override
@@ -69,11 +78,13 @@ public class simpleEditor extends Application {
                 if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
                     // Ignore control keys, which have non-zero length, as well as the backspace
                     // key, which is represented as a character of value = 8 on Windows.
-                    displayText.setText(characterTyped);
+                	for (Text p:output) {
+                    p.setText(characterTyped);
+                	}
                     keyEvent.consume();
                 }
 
-                centerText();
+//                centerText();
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
                 // events have a code that we can check (KEY_TYPED events don't have an associated
@@ -81,12 +92,16 @@ public class simpleEditor extends Application {
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.UP) {
                     fontSize += 5;
-                    displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
+                    for (Text p:output) {
+                    p.setFont(Font.font(fontName, fontSize));
+                    }
+                  //  centerText();
                 } else if (code == KeyCode.DOWN) {
                     fontSize = Math.max(0, fontSize - 5);
-                    displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
+                    for (Text p:output) {
+                    p.setFont(Font.font(fontName, fontSize));
+                    }
+                  //  centerText();
                 }
             }
         }
@@ -108,9 +123,10 @@ public class simpleEditor extends Application {
             // Make sure the text appears in front of any other objects you might add.
             displayText.toFront();
         }
+        */
     }
 
-*/
+
     @Override
     public void start(Stage primaryStage) {
         // Create a Node that will be the parent of all things displayed on the screen.
@@ -128,7 +144,7 @@ public class simpleEditor extends Application {
         scene.setOnKeyTyped(keyEventHandler);
         scene.setOnKeyPressed(keyEventHandler);
 
-        primaryStage.setTitle("Single Letter Display Simple");
+        primaryStage.setTitle("Simple Editor");
 
         // This is boilerplate, necessary to setup the window where things are displayed.
         primaryStage.setScene(scene);
