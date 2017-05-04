@@ -40,7 +40,7 @@ public class simpleEditor extends Application {
         
         private String toDisplay = "";
         private ArrayList<String> box = new ArrayList<String>();
-        private int size = 0;
+        
 
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
             textCenterX = 10;
@@ -71,27 +71,22 @@ public class simpleEditor extends Application {
             	String characterTyped = keyEvent.getCharacter();
             	if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
             		
-                box.add(characterTyped);
-                size +=1;
-                System.out.println(size);
+                box.add(characterTyped);                              
             	}
 
             }                
 
-
-
            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
 
                 KeyCode code = keyEvent.getCode();
-                if (code == KeyCode.BACK_SPACE) {                	
-                    box.remove(size - 1);   
-                    size -=1;
-                    System.out.println(toDisplay);
-                    System.out.println(size);
-                                                          
+                if (code == KeyCode.BACK_SPACE) 
+                try {                	
+                    box.remove(box.size() - 1);                                                            
                 } 
-                       
-            } 
+                catch (ArrayIndexOutOfBoundsException e) {
+                }                
+            }
+           
            StringBuilder builder = new StringBuilder(box.size());
            for (String s: box) {
            	  builder.append(s);
@@ -99,7 +94,7 @@ public class simpleEditor extends Application {
            	toDisplay = builder.toString();
             displayText.setText(toDisplay);
             keyEvent.consume();
-        	} 
+        } 
         
         	
 /*This method is not used */
