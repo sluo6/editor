@@ -1,7 +1,5 @@
 package editor;
 
-import java.util.LinkedList;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
@@ -15,9 +13,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * A preliminary JavaFX application that displays the letters users enters. 
- * Not able to wrap text. Delete key works. Display text in top left corner.
- * 
+ * A JavaFX application that displays the letter the user has typed most recently in the center of
+ * the window. Pressing the up and down arrows causes the font size to increase and decrease,
+ * respectively.
  */
 public class simpleEditor extends Application {
     private static final int WINDOW_WIDTH = 500;
@@ -33,58 +31,49 @@ public class simpleEditor extends Application {
         private static final int STARTING_TEXT_POSITION_Y = 10;
 
         /** The Text to display on the screen. */
-//        private Text displayText = new Text(STARTING_TEXT_POSITION_X, STARTING_TEXT_POSITION_Y, "");
+        private Text displayText = new Text(STARTING_TEXT_POSITION_X, STARTING_TEXT_POSITION_Y, "");
         private int fontSize = STARTING_FONT_SIZE;
-        
-        private LinkedList<Text> output = new LinkedList<Text>(); 
-      
 
         private String fontName = "Verdana";
+        
+        private String toDisplay = "";
 
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
             textCenterX = 10;
             textCenterY = 10;
 
             // Initialize some empty text and add it to root so that it will be displayed.
-//            displayText = new Text(textCenterX, textCenterY, "");
-            output = new LinkedList<Text>();
-            for (Text p:output) {
-            	p = new Text(textCenterX, textCenterY, "");
-            }
+            displayText = new Text(textCenterX, textCenterY, "");
             // Always set the text origin to be VPos.TOP! Setting the origin to be VPos.TOP means
             // that when the text is assigned a y-position, that position corresponds to the
             // highest position across all letters (for example, the top of a letter like "I", as
             // opposed to the top of a letter like "e"), which makes calculating positions much
             // simpler!
-            for (Text p:output) {
-            	p.setTextOrigin(VPos.TOP);
-            	p.setFont(Font.font(fontName, fontSize));
-            }
-
+            displayText.setTextOrigin(VPos.TOP);
+            displayText.setFont(Font.font(fontName, fontSize));
 
             // All new Nodes need to be added to the root in order to be displayed.
-            for (Text p:output) {
-            root.getChildren().add(p);
-            }
+            root.getChildren().add(displayText);
         }
 
         @Override
         public void handle(KeyEvent keyEvent) {
+        	
+        	
             if (keyEvent.getEventType() == KeyEvent.KEY_TYPED) {
                 // Use the KEY_TYPED event rather than KEY_PRESSED for letter keys, because with
                 // the KEY_TYPED event, javafx handles the "Shift" key and associated
                 // capitalization.
                 String characterTyped = keyEvent.getCharacter();
+                toDisplay = toDisplay + characterTyped;
                 if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
                     // Ignore control keys, which have non-zero length, as well as the backspace
                     // key, which is represented as a character of value = 8 on Windows.
-                	for (Text p:output) {
-                    p.setText(characterTyped);
-                	}
+                    displayText.setText(toDisplay);
                     keyEvent.consume();
                 }
 
-//                centerText();
+              //  centerText();
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
                 // events have a code that we can check (KEY_TYPED events don't have an associated
@@ -92,21 +81,18 @@ public class simpleEditor extends Application {
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.UP) {
                     fontSize += 5;
-                    for (Text p:output) {
-                    p.setFont(Font.font(fontName, fontSize));
-                    }
-                  //  centerText();
+                    displayText.setFont(Font.font(fontName, fontSize));
+                    centerText();
                 } else if (code == KeyCode.DOWN) {
                     fontSize = Math.max(0, fontSize - 5);
-                    for (Text p:output) {
-                    p.setFont(Font.font(fontName, fontSize));
-                    }
-                  //  centerText();
+                    displayText.setFont(Font.font(fontName, fontSize));
+                    centerText();
                 }
-            }
+            
+        	}
         }
-/*May not be necessary
-        
+        	
+
         private void centerText() {
             // Figure out the size of the current text.
             double textHeight = displayText.getLayoutBounds().getHeight();
@@ -123,9 +109,7 @@ public class simpleEditor extends Application {
             // Make sure the text appears in front of any other objects you might add.
             displayText.toFront();
         }
-        */
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -144,7 +128,7 @@ public class simpleEditor extends Application {
         scene.setOnKeyTyped(keyEventHandler);
         scene.setOnKeyPressed(keyEventHandler);
 
-        primaryStage.setTitle("Simple Editor");
+        primaryStage.setTitle("Single Letter Display Simple");
 
         // This is boilerplate, necessary to setup the window where things are displayed.
         primaryStage.setScene(scene);
