@@ -40,6 +40,7 @@ public class simpleEditor extends Application {
         
         private String toDisplay = "";
         private ArrayList<String> box = new ArrayList<String>();
+        private int size = 0;
 
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
             textCenterX = 10;
@@ -67,44 +68,41 @@ public class simpleEditor extends Application {
                 // Use the KEY_TYPED event rather than KEY_PRESSED for letter keys, because with
                 // the KEY_TYPED event, javafx handles the "Shift" key and associated
                 // capitalization.
-                String characterTyped = keyEvent.getCharacter();
+            	String characterTyped = keyEvent.getCharacter();
+            	if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
+            		
                 box.add(characterTyped);
-                StringBuilder builder = new StringBuilder(box.size());
-                for (String s: box) {
-                	builder.append(s);
-                }
-                	toDisplay = builder.toString();
-            } 
-                    displayText.setText(toDisplay);
-                    keyEvent.consume();
+                size +=1;
+                System.out.println(size);
+            	}
 
-                
+            }                
 
 
 
-        if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
-                // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
-                // events have a code that we can check (KEY_TYPED events don't have an associated
-                // KeyCode).
+           if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+
                 KeyCode code = keyEvent.getCode();
-                if (code == KeyCode.BACK_SPACE) {
-                    box.remove(box.size() - 1);                    
+                if (code == KeyCode.BACK_SPACE) {                	
+                    box.remove(size - 1);   
+                    size -=1;
                     System.out.println(toDisplay);
-                    
-                    StringBuilder builder = new StringBuilder(box.size());
-                    for (String s: box) {
-                    	builder.append(s);
-                    }
-                    	toDisplay = builder.toString();
+                    System.out.println(size);
+                                                          
                 } 
-                        displayText.setText(toDisplay);
-                        keyEvent.consume();
-                } 
-            
+                       
+            } 
+           StringBuilder builder = new StringBuilder(box.size());
+           for (String s: box) {
+           	  builder.append(s);
+           }
+           	toDisplay = builder.toString();
+            displayText.setText(toDisplay);
+            keyEvent.consume();
         	} 
         
         	
-
+/*This method is not used */
         private void centerText() {
             // Figure out the size of the current text.
             double textHeight = displayText.getLayoutBounds().getHeight();
