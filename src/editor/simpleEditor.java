@@ -66,23 +66,21 @@ public class simpleEditor extends Application {
                 // capitalization.
                 String characterTyped = keyEvent.getCharacter();
                 toDisplay = toDisplay + characterTyped;
-                if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
+                if (characterTyped.length() > 0) {
                     // Ignore control keys, which have non-zero length, as well as the backspace
                     // key, which is represented as a character of value = 8 on Windows.
                     displayText.setText(toDisplay);
                     keyEvent.consume();
                 }
 
-              //  centerText();
+
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
                 // events have a code that we can check (KEY_TYPED events don't have an associated
                 // KeyCode).
                 KeyCode code = keyEvent.getCode();
-                if (code == KeyCode.UP) {
-                    fontSize += 5;
-                    displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
+                if (code == KeyCode.BACK_SPACE) {
+                    toDisplay = toDisplay.substring(0, toDisplay.length()-1);
                 } else if (code == KeyCode.DOWN) {
                     fontSize = Math.max(0, fontSize - 5);
                     displayText.setFont(Font.font(fontName, fontSize));
@@ -128,7 +126,7 @@ public class simpleEditor extends Application {
         scene.setOnKeyTyped(keyEventHandler);
         scene.setOnKeyPressed(keyEventHandler);
 
-        primaryStage.setTitle("Single Letter Display Simple");
+        primaryStage.setTitle("Simple Editor");
 
         // This is boilerplate, necessary to setup the window where things are displayed.
         primaryStage.setScene(scene);
