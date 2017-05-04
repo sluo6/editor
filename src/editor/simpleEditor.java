@@ -1,5 +1,7 @@
 package editor;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
@@ -37,6 +39,7 @@ public class simpleEditor extends Application {
         private String fontName = "Verdana";
         
         private String toDisplay = "";
+        private ArrayList<String> box = new ArrayList<String>();
 
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
             textCenterX = 10;
@@ -65,28 +68,41 @@ public class simpleEditor extends Application {
                 // the KEY_TYPED event, javafx handles the "Shift" key and associated
                 // capitalization.
                 String characterTyped = keyEvent.getCharacter();
-                toDisplay = toDisplay + characterTyped;
-                if (characterTyped.length() > 0) {
-                    // Ignore control keys, which have non-zero length, as well as the backspace
-                    // key, which is represented as a character of value = 8 on Windows.
+                box.add(characterTyped);
+                StringBuilder builder = new StringBuilder(box.size());
+                for (String s: box) {
+                	builder.append(s);
+                }
+                	toDisplay = builder.toString();
+            } 
                     displayText.setText(toDisplay);
                     keyEvent.consume();
-                }
+
                 
 
 
-            } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+
+        if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
                 // events have a code that we can check (KEY_TYPED events don't have an associated
                 // KeyCode).
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.BACK_SPACE) {
-                    toDisplay = toDisplay.substring(0, toDisplay.length()-1);
+                    box.remove(box.size() - 1);                    
                     System.out.println(toDisplay);
+                    
+                    StringBuilder builder = new StringBuilder(box.size());
+                    for (String s: box) {
+                    	builder.append(s);
+                    }
+                    	toDisplay = builder.toString();
+                } 
+                        displayText.setText(toDisplay);
+                        keyEvent.consume();
                 } 
             
         	} 
-        }
+        
         	
 
         private void centerText() {
