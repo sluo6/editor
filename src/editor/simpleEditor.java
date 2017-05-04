@@ -72,6 +72,7 @@ public class simpleEditor extends Application {
                     displayText.setText(toDisplay);
                     keyEvent.consume();
                 }
+                
 
 
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
@@ -81,13 +82,10 @@ public class simpleEditor extends Application {
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.BACK_SPACE) {
                     toDisplay = toDisplay.substring(0, toDisplay.length()-1);
-                } else if (code == KeyCode.DOWN) {
-                    fontSize = Math.max(0, fontSize - 5);
-                    displayText.setFont(Font.font(fontName, fontSize));
-                    centerText();
-                }
+                    System.out.println(toDisplay);
+                } 
             
-        	}
+        	} 
         }
         	
 
